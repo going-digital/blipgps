@@ -8,7 +8,7 @@ def ephemeris_filename(ephemeris_date):
     return ephemeris_date.strftime("brdc%j0.%yn.Z")
 
 def get_ephemeris(ephemeris_date):
-    fn = epehmeris_filename('brdc%j0.%yn.Z')
+    fn = ephemeris_filename('brdc%j0.%yn.Z')
     try:
         print("Looking for file {}".format(fn))
         open(fn, 'rb').close()
