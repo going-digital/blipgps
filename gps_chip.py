@@ -1,7 +1,28 @@
 # Generate the chip sequences for each GPS satellite
-#%%
+# %%
 import numpy as np
 from scipy.signal import max_len_seq
+
+
+def gps_ca_code(g2_offset, g2b_offset=None):
+    g1 = max_len_seq(10, taps=[7])[0]
+    g2 = max_len_seq(10, taps=[8, 7, 4, 2, 1])[0]
+    if g2b_offset:
+        # Algorithm 1
+        return np.bitwise_xor(
+            g1,
+            np.bitwise_xor(
+                # max_len_seq operates in a reverse orientation to IS-GPS-200L,
+                # so tap numbers are 10-n
+                np.roll(g2, g2_offset-10),
+                np.roll(g2, g2b_offset-10)
+            )
+        )
+    else:
+        return np.bitwise_xor(
+            g1,
+            np.roll(g2, g2_offset)
+        )
 
 
 def gps_ca_chip(prn):
@@ -35,46 +56,30 @@ def gps_ca_chip(prn):
     ['0o1550', '0o1271', '0o1441', '0o444', '0o32']
 
     """
-    g1 = max_len_seq(10, taps=[7])[0]
-    g2 = max_len_seq(10, taps=[8, 7, 4, 2, 1])[0]
-    if prn < 38:
-        lookup = {
-            # From IS-GPS-200L 3.3.2.3, Table 3-Ia
-            # G2 phase 1, G2 phase 2
-            1: (2, 6), 2: (3, 7), 3: (4, 8), 4: (5, 9), 5: (1, 9), 6: (2, 10),
-            7: (1, 8), 8: (2, 9), 9: (3, 10), 10: (2, 3), 11: (3, 4), 12: (5, 6),
-            13: (6, 7), 14: (7, 8), 15: (8, 9), 16: (9, 10), 17: (1, 4),
-            18: (2, 5), 19: (3, 6), 20: (4, 7), 21: (5, 8), 22: (6, 9), 23: (1, 3),
-            24: (4, 6), 25: (5, 7), 26: (6, 8), 27: (7, 9), 28: (8, 10),
-            29: (1, 6), 30: (2, 7), 31: (3, 8), 32: (4, 9), 33: (5, 10),
-            34: (4, 10), 35: (1, 7), 36: (2, 8), 37: (4, 10),
-        }
-        # max_len_seq operates in a reverse orientation to IS-GPS-200L,
-        # so tap numbers are 10-n
-        return np.bitwise_xor(
-            g1,
-            np.bitwise_xor(
-                np.roll(g2, lookup[prn][0]-10),
-                np.roll(g2, lookup[prn][1]-10)
-            )
-        )
-    else:
-        # GPS III use alternative chip code
-        lookup = {
-            # From IS-GPS-200L 3.3.2.3, Table 3-Ia
-            38: 67, 39: 103, 40: 91, 41: 19, 42: 679, 43: 225, 44: 625,
-            45: 946, 46: 638, 47: 161, 48: 1001, 49: 554, 50: 280, 51: 710,
-            52: 709, 53: 775, 54: 864, 55: 558, 56: 220, 57: 397, 58: 55,
-            59: 898, 60: 759, 61: 367, 62: 299, 63: 1018
-        }
-        return np.bitwise_xor(
-            g1,
-            np.roll(g2, lookup[prn])
-        )
+    lookup = {
+        # From IS-GPS-200L 3.3.2.3, Table 3-Ia
+        # G2 phase 1, G2 phase 2
+        1: (2, 6), 2: (3, 7), 3: (4, 8), 4: (5, 9), 5: (1, 9), 6: (2, 10),
+        7: (1, 8), 8: (2, 9), 9: (3, 10), 10: (2, 3), 11: (3, 4), 12: (5, 6),
+        13: (6, 7), 14: (7, 8), 15: (8, 9), 16: (9, 10), 17: (1, 4),
+        18: (2, 5), 19: (3, 6), 20: (4, 7), 21: (5, 8), 22: (6, 9), 23: (1, 3),
+        24: (4, 6), 25: (5, 7), 26: (6, 8), 27: (7, 9), 28: (8, 10),
+        29: (1, 6), 30: (2, 7), 31: (3, 8), 32: (4, 9), 33: (5, 10),
+        34: (4, 10), 35: (1, 7), 36: (2, 8), 37: (4, 10),
+        # From IS-GPS-200L 3.3.2.3, Table 3-Ia
+        38: (67, None), 39: (103, None), 40: (91, None), 41: (19, None),
+        42: (679, None), 43: (225, None), 44: (625, None), 45: (946, None),
+        46: (638, None), 47: (161, None), 48: (1001, None), 49: (554, None),
+        50: (280, None), 51: (710, None), 52: (709, None), 53: (775, None),
+        54: (864, None), 55: (558, None), 56: (220, None), 57: (397, None),
+        58: (55, None), 59: (898, None), 60: (759, None), 61: (367, None),
+        62: (299, None), 63: (1018, None)
+    }
+    return gps_ca_code(*lookup[prn])
 
 
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
 
-#%%
+# %%
