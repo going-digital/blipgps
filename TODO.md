@@ -1,0 +1,7 @@
+- [x] Find sources of GPS IQ recordings
+- [x] Resolve position with GNSS-SDR
+- [ ] Locate L1 C/A signals in Python
+- [ ] Python interface to NASA Daily GPS Broadcast Ephemeris files
+- [ ] Measure phase and code chip for each satellite
+- [ ] Extend to Galileo E1 and Beidou B1C, which are on same frequency.
+- [ ] Consider switching to L5
