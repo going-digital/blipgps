@@ -1,85 +1,137 @@
 # Generate the chip sequences for each GPS satellite
 # %%
 import numpy as np
-from scipy.signal import max_len_seq
+from scipy.signal import max_len_seq, resample
+from tqdm import tqdm
 
+# Generate delay table
+ca_g2_delay = {}
+prn_1 = [
+    # Source: IS-GPS-200L
+    # Note that 950 appears for both PRN34 and PRN37, so those sequences
+    # can not be discerned.
+    5, 6, 7, 8, 17, 18, 139, 140, 141, 251, 252, 254, 255, 256, 257, 258, 469,
+    470, 471, 472, 473, 474, 509, 512, 513, 514, 515, 516, 859, 860, 861, 862,
+    863, 950, 947, 948, 950,
+]
+for i, v in enumerate(prn_1):
+    ca_g2_delay[1+i] = v
+prn_120_sbas = [
+    # This covers codes for augmentation systems and other navigation systems
+    # using the same modulations.
+    # Includes satellites that are yet to launch as of 22 Nov 2020
+    # Source:
+    # https://www.gps.gov/technical/prn-codes/L1-CA-PRN-code-assignments-2019-Oct.pdf
+    145, 175, 52, 21, 237, 235, 886, 657, 634, 762,
+    355, 1012, 176, 603, 130, 359, 595, 68, 386, 797,
+    456, 499, 883, 307, 127, 211, 121, 118, 163, 628,
+    853, 484, 289, 811, 202, 1021, 463, 568, 904, 670,
+    230, 911, 684, 309, 644, 932, 12, 314, 891, 212,
+    185, 675, 503, 150, 395, 345, 846, 798, 992, 357,
+    995, 877, 112, 144, 476, 193, 109, 445, 291, 87,
+    399, 292, 901, 339, 208, 711, 189, 263, 537, 663,
+    942, 173, 900, 30, 500, 935, 556, 373, 85, 652,
+    310
+]
+for i, v in enumerate(prn_120_sbas):
+    ca_g2_delay[120+i] = v
 
-def gps_ca_code(g2_offset, g2b_offset=None):
-    g1 = max_len_seq(10, taps=[7])[0]
-    g2 = max_len_seq(10, taps=[8, 7, 4, 2, 1])[0]
-    if g2b_offset:
-        # Algorithm 1
-        return np.bitwise_xor(
-            g1,
-            np.bitwise_xor(
-                # max_len_seq operates in a reverse orientation to IS-GPS-200L,
-                # so tap numbers are 10-n
-                np.roll(g2, g2_offset-10),
-                np.roll(g2, g2b_offset-10)
-            )
-        )
-    else:
-        return np.bitwise_xor(
-            g1,
-            np.roll(g2, g2_offset)
-        )
+# %%
+operational_satellites = (
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 16, 17, 18, 19, 20, 21, 22,
+    23, 24, 25, 26, 27, 28, 29, 30, 31, 32, # GPS
+    120, 121, 123, 126, 136, # EGNOS
+    122, # GATBP
+    125, 140, 141, # SDCM
+    127, 128, # GAGAN
+    129, 137, # MSAS
+    131, 135, 138, # WAAS
+    130, 143, 144, # BDSBAS
+    147, # NSAS
+    183, 184, 185, 189, 196, 197, 200, # QZSS
+)
 
+# %%
 
 def gps_ca_chip(prn):
     """From IS-GPS-200L 3.3.2.3, Table 3-Ia
-    Generate first 10 chips of SV 1
-    >>> gps_ca_chip(1)[:10]
-    array([1, 1, 0, 0, 1, 0, 0, 0, 0, 0], dtype=int8)
-
-    Generate First 10 Chips Octal C/A column of Table 3-Ia
-    >>> p = np.power(2, np.arange(9,-1,-1))
-    >>> r=[oct(np.sum(gps_ca_chip(prn)[:10] * p)) for prn in range(1, 64)]
-    >>> r[:7]
-    ['0o1440', '0o1620', '0o1710', '0o1744', '0o1133', '0o1455', '0o1131']
-    >>> r[7:14]
-    ['0o1454', '0o1626', '0o1504', '0o1642', '0o1750', '0o1764', '0o1772']
-    >>> r[14:21]
-    ['0o1775', '0o1776', '0o1156', '0o1467', '0o1633', '0o1715', '0o1746']
-    >>> r[21:28]
-    ['0o1763', '0o1063', '0o1706', '0o1743', '0o1761', '0o1770', '0o1774']
-    >>> r[28:35]
-    ['0o1127', '0o1453', '0o1625', '0o1712', '0o1745', '0o1713', '0o1134']
-    >>> r[35:37]
-    ['0o1456', '0o1713']
-    >>> r[37:44]
-    ['0o1760', '0o1236', '0o63', '0o626', '0o126', '0o1674', '0o1234']
-    >>> r[44:51]
-    ['0o271', '0o712', '0o213', '0o412', '0o236', '0o450', '0o61']
-    >>> r[51:58]
-    ['0o142', '0o775', '0o762', '0o111', '0o1600', '0o424', '0o1351']
-    >>> r[58:65]
-    ['0o1550', '0o1271', '0o1441', '0o444', '0o32']
 
     """
-    lookup = {
-        # From IS-GPS-200L 3.3.2.3, Table 3-Ia
-        # G2 phase 1, G2 phase 2
-        1: (2, 6), 2: (3, 7), 3: (4, 8), 4: (5, 9), 5: (1, 9), 6: (2, 10),
-        7: (1, 8), 8: (2, 9), 9: (3, 10), 10: (2, 3), 11: (3, 4), 12: (5, 6),
-        13: (6, 7), 14: (7, 8), 15: (8, 9), 16: (9, 10), 17: (1, 4),
-        18: (2, 5), 19: (3, 6), 20: (4, 7), 21: (5, 8), 22: (6, 9), 23: (1, 3),
-        24: (4, 6), 25: (5, 7), 26: (6, 8), 27: (7, 9), 28: (8, 10),
-        29: (1, 6), 30: (2, 7), 31: (3, 8), 32: (4, 9), 33: (5, 10),
-        34: (4, 10), 35: (1, 7), 36: (2, 8), 37: (4, 10),
-        # From IS-GPS-200L 3.3.2.3, Table 3-Ia
-        38: (67, None), 39: (103, None), 40: (91, None), 41: (19, None),
-        42: (679, None), 43: (225, None), 44: (625, None), 45: (946, None),
-        46: (638, None), 47: (161, None), 48: (1001, None), 49: (554, None),
-        50: (280, None), 51: (710, None), 52: (709, None), 53: (775, None),
-        54: (864, None), 55: (558, None), 56: (220, None), 57: (397, None),
-        58: (55, None), 59: (898, None), 60: (759, None), 61: (367, None),
-        62: (299, None), 63: (1018, None)
-    }
-    return gps_ca_code(*lookup[prn])
+    g1 = max_len_seq(10, taps=[7])[0]
+    g2 = max_len_seq(10, taps=[8, 7, 4, 2, 1])[0]
+    return np.bitwise_xor(
+        g1,
+        np.roll(g2, ca_g2_delay[prn])
+    )
 
+
+def gps_ca_modulated(prn, fs=4000000):
+    # Generate oversampled bitstream
+    phase = np.repeat(2 * (gps_ca_chip(prn) - 0.5), 16)
+    # Downsample to required rate
+    return resample(phase, fs//1000)
+
+
+def ca_code_test():
+    """Test C/A code generator using vectors from IS-GPS-200L
+    >>> ca_code_test()
+    """
+    # From IS-GPS-200L Table 3-Ia
+    vectors = [
+        (1, 0o1440), (2, 0o1620), (3, 0o1710), (4, 0o1744), (5, 0o1133),
+        (6, 0o1455), (7, 0o1131), (8, 0o1454), (9, 0o1626), (10, 0o1504),
+        (11, 0o1642), (12, 0o1750), (13, 0o1764), (14, 0o1772), (15, 0o1775),
+        (16, 0o1776), (17, 0o1156), (18, 0o1467), (19, 0o1633), (20, 0o1715),
+        (21, 0o1746), (22, 0o1763), (23, 0o1063), (24, 0o1706), (25, 0o1743),
+        (26, 0o1761), (27, 0o1770), (28, 0o1774), (29, 0o1127), (30, 0o1453),
+        (31, 0o1625), (32, 0o1712), (33, 0o1745), (34, 0o1713), (35, 0o1134),
+        (36, 0o1456), (37, 0o1713), (120, 0o671), (121, 0o536), (122, 0o1510),
+        (123, 0o1545), (124, 0o160), (125, 0o701), (126, 0o13), (127, 0o1060),
+        (128, 0o245), (129, 0o527), (130, 0o1436), (131, 0o1226),
+        (132, 0o1257), (133, 0o46), (134, 0o1071), (135, 0o561), (136, 0o1037),
+        (137, 0o770), (138, 0o1327), (139, 0o1472), (140, 0o124), (141, 0o366),
+        (142, 0o133), (143, 0o465), (144, 0o717), (145, 0o217), (146, 0o1742),
+        (147, 0o1422), (148, 0o1442), (149, 0o523), (150, 0o736),
+        (151, 0o1635), (152, 0o136), (153, 0o273), (154, 0o1026), (155, 0o3),
+        (156, 0o1670), (157, 0o624), (158, 0o235), (159, 0o554), (160, 0o75),
+        (161, 0o1341), (162, 0o42), (163, 0o115), (164, 0o207), (165, 0o204),
+        (166, 0o1576), (167, 0o1142), (168, 0o40), (169, 0o107), (170, 0o1643),
+        (171, 0o553), (172, 0o317), (173, 0o415), (174, 0o123), (175, 0o1267),
+        (176, 0o1535), (177, 0o635), (178, 0o760), (179, 0o707), (180, 0o1276),
+        (181, 0o1322), (182, 0o211), (183, 0o1562), (184, 0o774), (185, 0o323),
+        (186, 0o112), (187, 0o1306), (188, 0o27), (189, 0o1470), (190, 0o1505),
+        (191, 0o1013), (192, 0o355), (193, 0o727), (194, 0o170), (195, 0o30),
+        (196, 0o472), (197, 0o1237), (198, 0o414), (199, 0o1050),
+        (200, 0o1630), (201, 0o571), (202, 0o732), (203, 0o1301),
+        (204, 0o1173), (205, 0o20), (206, 0o447), (207, 0o1114), (208, 0o341),
+        (209, 0o1024), (210, 0o1046)
+    ]
+    p = np.power(2, np.arange(9, -1, -1))
+    for prn, v in tqdm(vectors):
+        gps_ca_code = gps_ca_chip(prn)
+        r = np.sum(gps_ca_code[:10] * p)
+        assert(v == r)
+
+def ca_table(fs):
+    table = {}
+    for prn in tqdm(ca_g2_delay.keys()):
+        if prn in operational_satellites:
+            table[prn] = gps_ca_modulated(prn, fs)
+    return table
+# %%
+# ca_table(4000000)
+# %%
+import matplotlib.pyplot as plt
+fs = 4000000
+plt.plot(gps_ca_modulated(1, fs)[:100])
+plt.show()
+# %%
 
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
+
+
+# %%
 
 # %%

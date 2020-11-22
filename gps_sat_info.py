@@ -1,0 +1,101 @@
+# PRN: SV, name, CA offset, CA test vector, P offset, P test vector
+"""
+Abbreviations:
+ASAL Algerian Space Agency
+AUS-NZ Geoscience Australia/New Zealand System
+BDSBAS BeiDou Satellite-Based Augmentation System
+EGNOS European Geostationary Navigation Overlay Service
+GAGAN GPS Aided Geo-Augmented Navigation
+GBAS Ground Based Augmentation System
+KASS Korean Augmented Satellite System
+MSAS MTSAT Space-Based Augmentation System
+NSAS Nigerian Satellite Augmentation System
+QZSS Quasi-Zenith Satellite System
+SDCM System of Differential Correction and Monitoring
+WAAS Wide Area Augmentation System
+"""
+
+sats_info = {
+    1: ('GPS', 'PRN 1', '-'),
+    2: ('GPS', 'PRN 2', '-'),
+    3: ('GPS', 'PRN 3', '-'),
+    4: ('GPS', 'PRN 4', '-'),
+    5: ('GPS', 'PRN 5', '-'),
+    6: ('GPS', 'PRN 6', '-'),
+    7: ('GPS', 'PRN 7', '-'),
+    8: ('GPS', 'PRN 8', '-'),
+    9: ('GPS', 'PRN 9', '-'),
+    10: ('GPS', 'PRN 10', '-'),
+    11: ('GPS', 'PRN 11', '-'),
+    12: ('GPS', 'PRN 12', '-'),
+    13: ('GPS', 'PRN 13', '-'),
+    14: ('GPS', 'PRN 14', '-'),
+    15: ('GPS', 'PRN 15', '-'),
+    16: ('GPS', 'PRN 16', '-'),
+    17: ('GPS', 'PRN 17', '-'),
+    18: ('GPS', 'PRN 18', '-'),
+    19: ('GPS', 'PRN 19', '-'),
+    20: ('GPS', 'PRN 20', '-'),
+    21: ('GPS', 'PRN 21', '-'),
+    22: ('GPS', 'PRN 22', '-'),
+    23: ('GPS', 'PRN 23', '-'),
+    24: ('GPS', 'PRN 24', '-'),
+    25: ('GPS', 'PRN 25', '-'),
+    26: ('GPS', 'PRN 26', '-'),
+    27: ('GPS', 'PRN 27', '-'),
+    28: ('GPS', 'PRN 28', '-'),
+    29: ('GPS', 'PRN 29', '-'),
+    30: ('GPS', 'PRN 30', '-'),
+    31: ('GPS', 'PRN 31', '-'),
+    32: ('GPS', 'PRN 32', '-'),
+    33: ('GPS', 'PRN 33', '-'),
+    34: ('GPS', 'PRN 34', '-'),
+    35: ('GPS', 'PRN 35', '-'),
+    36: ('GPS', 'PRN 36', '-'),
+    37: ('GPS', 'PRN 37', '-'),
+    120: ('EGNOS', 'Reserved PRN120', '-'),
+    121: ('EGNOS', 'Eutelsat 5WB', '5 W'),
+    122: ('AUS-NZ', 'INMARSAT 4F1', '143.5 E'),
+    123: ('EGNOS', 'ASTRA 5B', '31.5 E'),
+    124: ('EGNOS', 'Reserved PRN124', '-'),
+    125: ('SDCM', 'Luch-5A', '16 W'),
+    126: ('EGNOS', 'INMARSAT 4F2', '63.9 E'),
+    127: ('GAGAN', 'GSAT-8', '55 E'),
+    128: ('GAGAN', 'GSAT-10', '83 E'),
+    129: ('MSAS', 'MTSAT-2', '145 E'),
+    130: ('BDSBAS', 'G6', '80 E'),
+    131: ('WAAS', 'Eutelsat 117 West B', '117 W'),
+    132: ('GAGAN', 'GSAT-15', '93.5 E'),
+    133: ('WAAS', 'SES-15', '129 W'),
+    134: ('KASS', 'MEASAT-3D', '91.5 E'),
+    135: ('WAAS', 'Intelsat Galaxy 30', '125 W'),
+    136: ('EGNOS', 'SES-5', '5 E'),
+    137: ('MSAS', 'MTSAT-2', '145 E'),
+    138: ('WAAS', 'ANIK F1R', '107.3 W'),
+    140: ('SDCM', 'Luch-5B', '95 E'),
+    141: ('SDCM', 'Luch-4', '167 E'),
+    143: ('BDSBAS', 'G3', '110.5 E'),
+    144: ('BDSBAS', 'G1', '140 E'),
+    147: ('NSAS', 'NIGCOMSAT-1R', '42.5 E'),
+    148: ('ASAL', 'ALCOMSAT-1', '24.8 W'),
+    183: ('QZSS', 'QZS1', ''),
+    184: ('QZSS', 'Reserved', ''),
+    185: ('QZSS', 'Reserved', ''),
+    186: ('QZSS', 'Reserved', ''),
+    187: ('QZSS', 'Reserved', ''),
+    188: ('QZSS', 'Reserved', ''),
+    189: ('QZSS', 'Reserved', ''),
+    190: ('QZSS', 'Reserved', ''),
+    191: ('QZSS', 'Reserved', ''),
+    192: ('QZSS', 'Reserved', ''),
+    193: ('QZSS', 'QZS1', ''),
+    194: ('QZSS', 'Reserved', ''),
+    195: ('QZSS', 'Reserved', ''),
+    196: ('QZSS', 'Reserved', ''),
+    197: ('QZSS', 'Reserved', ''),
+    198: ('QZSS', 'Reserved', ''),
+    199: ('QZSS', 'Reserved', ''),
+    200: ('QZSS', 'Reserved', ''),
+    201: ('QZSS', 'Reserved', ''),
+    202: ('QZSS', 'Reserved', ''),
+}
