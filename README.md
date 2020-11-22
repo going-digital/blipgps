@@ -1,6 +1,8 @@
 # blipgps
 Determine GPS location with minimal receiver time.
 
+## Note this project is currently in development and is not yet functional.
+
 The intent of this project is to provide open source code to calculate a unique position and time from a short wideband recording of the GPS band using software defined radio techniques.
 
 To set up test files:
