@@ -1,2 +1,4 @@
 2013_04_04_GNSS_SIGNAL_at_CTTC_SPAIN.*
 brdc*
+.vscode/*
+__pycache__/*
