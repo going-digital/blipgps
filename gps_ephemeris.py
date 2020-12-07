@@ -1,14 +1,17 @@
-import datetime
+import datetime as dt
 import requests
 import time
 import georinex as gr
+
+# TODO: Check http://www.igs.org/products for a source of high precision ephemerides
 
 def ephemeris_filename(ephemeris_date):
     # Return daily filename
     return ephemeris_date.strftime("brdc%j0.%yn.Z")
 
 def get_ephemeris(ephemeris_date):
-    fn = ephemeris_filename('brdc%j0.%yn.Z')
+    print(ephemeris_date)
+    fn = ephemeris_filename(ephemeris_date)
     try:
         print("Looking for file {}".format(fn))
         open(fn, 'rb').close()

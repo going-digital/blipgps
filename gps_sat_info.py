@@ -14,8 +14,11 @@ QZSS Quasi-Zenith Satellite System
 SDCM System of Differential Correction and Monitoring
 WAAS Wide Area Augmentation System
 """
+import datetime as dt
 
 sats_info = {
+    # List of all PRN allocations on the L1C/A band
+    # GPS satellites are changed regularly - check with US gov. for current list.
     1: ('GPS', 'PRN 1', '-'),
     2: ('GPS', 'PRN 2', '-'),
     3: ('GPS', 'PRN 3', '-'),
@@ -53,7 +56,7 @@ sats_info = {
     35: ('GPS', 'PRN 35', '-'),
     36: ('GPS', 'PRN 36', '-'),
     37: ('GPS', 'PRN 37', '-'),
-    120: ('EGNOS', 'Reserved PRN120', '-'),
+    120: ('EGNOS', 'INMARSAT 3F2 AOR-E', '15.5 W'),
     121: ('EGNOS', 'Eutelsat 5WB', '5 W'),
     122: ('AUS-NZ', 'INMARSAT 4F1', '143.5 E'),
     123: ('EGNOS', 'ASTRA 5B', '31.5 E'),
@@ -78,24 +81,176 @@ sats_info = {
     144: ('BDSBAS', 'G1', '140 E'),
     147: ('NSAS', 'NIGCOMSAT-1R', '42.5 E'),
     148: ('ASAL', 'ALCOMSAT-1', '24.8 W'),
-    183: ('QZSS', 'QZS1', ''),
-    184: ('QZSS', 'Reserved', ''),
-    185: ('QZSS', 'Reserved', ''),
-    186: ('QZSS', 'Reserved', ''),
-    187: ('QZSS', 'Reserved', ''),
-    188: ('QZSS', 'Reserved', ''),
-    189: ('QZSS', 'Reserved', ''),
-    190: ('QZSS', 'Reserved', ''),
-    191: ('QZSS', 'Reserved', ''),
-    192: ('QZSS', 'Reserved', ''),
-    193: ('QZSS', 'QZS1', ''),
-    194: ('QZSS', 'Reserved', ''),
-    195: ('QZSS', 'Reserved', ''),
-    196: ('QZSS', 'Reserved', ''),
-    197: ('QZSS', 'Reserved', ''),
-    198: ('QZSS', 'Reserved', ''),
-    199: ('QZSS', 'Reserved', ''),
-    200: ('QZSS', 'Reserved', ''),
-    201: ('QZSS', 'Reserved', ''),
-    202: ('QZSS', 'Reserved', ''),
+    # https://qzss.go.jp/en/technical/satellites/index.html#QZSS
+    #183: ('QZSS', 'QZS-1 L1S', ''),
+    #184: ('QZSS', 'QZS-2 L1S', ''),
+    #185: ('QZSS', 'QZS-4 L1S', ''),
+    #186: ('QZSS', 'Reserved', ''),
+    #187: ('QZSS', 'Reserved', ''),
+    #188: ('QZSS', 'Reserved', ''),
+    #189: ('QZSS', 'QZS-3 L1S', ''),
+    #190: ('QZSS', 'Reserved', ''),
+    #191: ('QZSS', 'Reserved', ''),
+    #192: ('QZSS', 'Reserved', ''),
+    193: ('QZSS', 'QZS-1', ''),
+    194: ('QZSS', 'QZS-2', ''),
+    195: ('QZSS', 'QZS-4', ''),
+    #196: ('QZSS', 'QZS-2 L5S', ''),
+    #197: ('QZSS', 'Reserved', ''),
+    #198: ('QZSS', 'Reserved', ''),
+    199: ('QZSS', 'QZS-3', ''),
+    #200: ('QZSS', 'QZS-4 L5S', ''),
+    #201: ('QZSS', 'Reserved', ''),
+    #202: ('QZSS', 'Reserved', ''),
+}
+
+prn_lookup = {
+    "OPS 5111": {
+        'SVN': 1, 'PRN slots': [
+            (4, dt.date(1978, 2, 22), dt.date(1985, 7, 17)),
+        ]
+    },
+    "OPS 5112": {
+        'SVN': 2, 'PRN slots': [
+            (7, dt.date(1978, 5, 13), dt.date(1981, 7, 16)),
+        ]
+    },
+    "OPS 5113": {
+        'SVN': 3, 'PRN slots': [
+            (6, dt.date(1978, 10, 7), dt.date(1992, 5, 18)),
+        ]
+    },
+    "OPS 5114": {
+        'SVN': 4, 'PRN slots': [
+            (8, dt.date(1978, 12, 11), dt.date(1989, 10, 14)),
+        ]
+    },
+    "OPS 5117": {
+        'SVN': 5, 'PRN slots': [
+            (5, dt.date(1980, 12, 9), dt.date(1983, 11, 28)),
+        ]
+    },
+    "OPS 5118": {
+        'SVN': 6, 'PRN slots': [
+            (9, dt.date(1980, 4, 26), dt.date(1991, 3, 6)),
+        ]
+    },
+    "OPS 9794": {
+        'SVN': 6, 'PRN slots': [
+            (9, dt.date(1983, 7, 14), dt.date(1993, 5, 4)),
+        ]
+    },
+    "USA-1": {
+        'SVN': 9, 'PRN slots': [
+            (13, dt.date(1984, 6, 13), dt.date(1994, 6, 20)),
+        ]
+    },
+    "USA-5": {
+        'SVN': 10, 'PRN slots': [
+            (12, dt.date(1984, 9, 8), dt.date(1995, 11, 18)),
+        ]
+    },
+    "USA-10": {
+        'SVN': 11, 'PRN slots': [
+            (11, dt.date(1985, 10, 9), dt.date(1994, 4, 13)),
+        ]
+    },
+    "USA-35": {
+        'SVN': 14, 'PRN slots': [
+            (14, dt.date(1989, 2, 14), dt.date(2000, 3, 26)),
+        ]
+    },
+    "USA-38": {
+        'SVN': 13, 'PRN slots': [
+            (2, dt.date(1989, 6, 10), dt.date(2004, 2, 22)),
+        ]
+    },
+    "USA-42": {
+        'SVN': 16, 'PRN slots': [
+            (16, dt.date(1989, 8, 18), dt.date(2000, 10, 13)),
+        ]
+    },
+    "USA-47": {
+        'SVN': 19, 'PRN slots': [
+            (19, dt.date(1989, 10, 21), dt.date(2001, 3, 16)),
+        ]
+    },
+    "USA-49": {
+        'SVN': 17, 'PRN slots': [
+            (17, dt.date(1989, 12, 11), dt.date(2005, 2, 23)),
+        ]
+    },
+    "USA-50": {
+        'SVN': 18, 'PRN slots': [
+            (18, dt.date(1990, 1, 24), dt.date(2000, 8, 18)),
+        ]
+    },
+    "USA-54": {
+        'SVN': 20, 'PRN slots': [
+            (20, dt.date(1990, 3, 26), dt.date(1996, 5, 21)),
+        ]
+    },
+    "USA-63": {
+        'SVN': 21, 'PRN slots': [
+            (21, dt.date(1990, 8, 2), dt.date(2002, 9, 25)),
+        ]
+    },
+    "USA-64": {
+        'SVN': 15, 'PRN slots': [
+            (15, dt.date(1990, 10, 1), dt.date(2006, 11, 17)),
+        ]
+    },
+    "USA-66": {
+        'SVN': 23, 'PRN slots': [
+            (23, dt.date(1990, 11, 26), dt.date(2004, 2, 13)),
+            (32, dt.date(2008, 2, 25), dt.date(2016, 1, 25)),
+        ]
+    },
+    "USA-71": {
+        'SVN': 24, 'PRN slots': [
+            (24, dt.date(1991, 7, 4), dt.date(2011, 9, 30)),
+        ]
+    },
+    "USA-79": {
+        'SVN': 25, 'PRN slots': [
+            (25, dt.date(1992, 2, 23), dt.date(2009, 12, 18)),
+        ]
+    },
+    "USA-80": {
+        'SVN': 28, 'PRN slots': [
+            (28, dt.date(1992, 4, 10), dt.date(1997, 8, 15)),
+        ]
+    },
+    "USA-83": {
+        'SVN': 26, 'PRN slots': [
+            (26, dt.date(1992, 7, 7), dt.date(2015, 1, 6)),
+        ]
+    },
+    "USA-84": {
+        'SVN': 27, 'PRN slots': [
+            (27, dt.date(1992, 9, 9), dt.date(2011, 8, 10)),
+        ]
+    },
+    "USA-85": {
+        'SVN': 32, 'PRN slots': [
+            (31, dt.date(1992, 11, 22), dt.date(1993, 1, 1)),
+            (1, dt.date(1993, 1, 1), dt.date(2008, 3, 17)),
+        ]
+    },
+    "USA-87": {
+        'SVN': 29, 'PRN slots': [
+            (29, dt.date(1992, 12, 18), dt.date(2007, 10, 23)),
+        ]
+    },
+    "USA-88": {
+        'SVN': 22, 'PRN slots': [
+            (22, dt.date(1993, 2, 3), dt.date(2002, 12, 3)),
+        ]
+    },
+    "USA-90": {
+        'SVN': 31, 'PRN slots': [
+            (31, dt.date(1993, 2, 3), dt.date(2002, 12, 3)),
+        ]
+    },
+    # TODO: Complete this list
 }

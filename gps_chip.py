@@ -37,19 +37,43 @@ for i, v in enumerate(prn_120_sbas):
     ca_g2_delay[120+i] = v
 
 # %%
-operational_satellites = (
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 16, 17, 18, 19, 20, 21, 22,
-    23, 24, 25, 26, 27, 28, 29, 30, 31, 32, # GPS
-    120, 121, 123, 126, 136, # EGNOS
-    122, # GATBP
-    125, 140, 141, # SDCM
-    127, 128, # GAGAN
-    129, 137, # MSAS
-    131, 135, 138, # WAAS
-    130, 143, 144, # BDSBAS
-    147, # NSAS
-    183, 184, 185, 189, 196, 197, 200, # QZSS
-)
+operational_satellites = set()
+
+# GPS constellation - 1 to 32, 14 currently not used
+operational_satellites.update(range(1, 33))
+operational_satellites.remove(14)
+
+# EGNOS constellation
+# European Geostationary Navigatoin Overlay Service
+operational_satellites.update([120, 121, 123, 126, 136])
+
+# GATBP satellite
+operational_satellites.update([122])
+
+# SDCM constellation
+operational_satellites.update([125, 140, 141])
+
+# GAGAN constellation
+operational_satellites.update([127, 128])
+
+# MSAS constellation
+# Multi-functional Satellite Augmentation System
+# MTSAT-1R (Himawari 6) and MTSAT-2 (Himawari 7)
+operational_satellites.update([129, 137])
+
+# WAAS constellation
+# Wide Area Augmentation System
+operational_satellites.update([131, 135, 138])
+
+# BDSBAS constellation
+operational_satellites.update([130, 143, 144])
+
+# NSAS satellite
+operational_satellites.update([147])
+
+# QZSS (Michibiki / みちびき) constellation
+# Provides enhanced positioning over Asia-Oceania esp. Japan
+operational_satellites.update([193, 194, 195, 199])
 
 # %%
 
@@ -121,10 +145,10 @@ def ca_table(fs):
 # %%
 # ca_table(4000000)
 # %%
-import matplotlib.pyplot as plt
-fs = 4000000
-plt.plot(gps_ca_modulated(1, fs)[:100])
-plt.show()
+#import matplotlib.pyplot as plt
+#fs = 4000000
+#plt.plot(gps_ca_modulated(1, fs)[:100])
+#plt.show()
 # %%
 
 if __name__ == "__main__":
