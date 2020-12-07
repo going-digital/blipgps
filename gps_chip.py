@@ -77,6 +77,7 @@ operational_satellites.update([193, 194, 195, 199])
 
 # %%
 
+
 def gps_ca_chip(prn):
     """From IS-GPS-200L 3.3.2.3, Table 3-Ia
 
@@ -136,6 +137,7 @@ def ca_code_test():
         r = np.sum(gps_ca_code[:10] * p)
         assert(v == r)
 
+
 def ca_table(fs):
     table = {}
     for prn in tqdm(ca_g2_delay.keys()):
@@ -145,11 +147,12 @@ def ca_table(fs):
 # %%
 # ca_table(4000000)
 # %%
-#import matplotlib.pyplot as plt
-#fs = 4000000
-#plt.plot(gps_ca_modulated(1, fs)[:100])
-#plt.show()
+# import matplotlib.pyplot as plt
+# fs = 4000000
+# plt.plot(gps_ca_modulated(1, fs)[:100])
+# plt.show()
 # %%
+
 
 if __name__ == "__main__":
     import doctest

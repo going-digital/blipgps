@@ -1,4 +1,4 @@
-#%%
+# %%
 import numpy as np
 from tqdm import tqdm
 from gps_sat_info import sats_info
@@ -6,7 +6,8 @@ import pyfftw
 np.fft = pyfftw.interfaces.numpy_fft
 pyfftw.interfaces.cache.enable()
 from gps_chip import ca_table
-#%%
+# %%
+
 
 def gps_acquisition(data, fs, fc):
     chip_samples = int(fs // 1000)
@@ -29,7 +30,7 @@ def gps_acquisition(data, fs, fc):
     xx = np.arange(chip_samples)/chip_samples
     yy = np.arange(-doppler_offset, doppler_offset+1, 250)
 
-    threshold = 10 # 15
+    threshold = 10  # 15
 
     coarse_acq = {}
     for prn in tqdm(fft_ca_chips.keys()):
@@ -52,7 +53,7 @@ def gps_acquisition(data, fs, fc):
             coarse_acq[prn] = {
                 'chip phase': np.argmax(results_phase),
                 'doppler': np.argmax(results_doppler)
-            })
+            }
 
     # Fine acquisition:
     # At this point doppler is a fraction of a sample bin.

@@ -18,7 +18,8 @@ import datetime as dt
 
 sats_info = {
     # List of all PRN allocations on the L1C/A band
-    # GPS satellites are changed regularly - check with US gov. for current list.
+    # GPS satellites are changed regularly - check with US gov. for current
+    # list.
     1: ('GPS', 'PRN 1', '-'),
     2: ('GPS', 'PRN 2', '-'),
     3: ('GPS', 'PRN 3', '-'),
@@ -82,26 +83,26 @@ sats_info = {
     147: ('NSAS', 'NIGCOMSAT-1R', '42.5 E'),
     148: ('ASAL', 'ALCOMSAT-1', '24.8 W'),
     # https://qzss.go.jp/en/technical/satellites/index.html#QZSS
-    #183: ('QZSS', 'QZS-1 L1S', ''),
-    #184: ('QZSS', 'QZS-2 L1S', ''),
-    #185: ('QZSS', 'QZS-4 L1S', ''),
-    #186: ('QZSS', 'Reserved', ''),
-    #187: ('QZSS', 'Reserved', ''),
-    #188: ('QZSS', 'Reserved', ''),
-    #189: ('QZSS', 'QZS-3 L1S', ''),
-    #190: ('QZSS', 'Reserved', ''),
-    #191: ('QZSS', 'Reserved', ''),
-    #192: ('QZSS', 'Reserved', ''),
+    # 183: ('QZSS', 'QZS-1 L1S', ''),
+    # 184: ('QZSS', 'QZS-2 L1S', ''),
+    # 185: ('QZSS', 'QZS-4 L1S', ''),
+    # 186: ('QZSS', 'Reserved', ''),
+    # 187: ('QZSS', 'Reserved', ''),
+    # 188: ('QZSS', 'Reserved', ''),
+    # 189: ('QZSS', 'QZS-3 L1S', ''),
+    # 190: ('QZSS', 'Reserved', ''),
+    # 191: ('QZSS', 'Reserved', ''),
+    # 192: ('QZSS', 'Reserved', ''),
     193: ('QZSS', 'QZS-1', ''),
     194: ('QZSS', 'QZS-2', ''),
     195: ('QZSS', 'QZS-4', ''),
-    #196: ('QZSS', 'QZS-2 L5S', ''),
-    #197: ('QZSS', 'Reserved', ''),
-    #198: ('QZSS', 'Reserved', ''),
+    # 196: ('QZSS', 'QZS-2 L5S', ''),
+    # 197: ('QZSS', 'Reserved', ''),
+    # 198: ('QZSS', 'Reserved', ''),
     199: ('QZSS', 'QZS-3', ''),
-    #200: ('QZSS', 'QZS-4 L5S', ''),
-    #201: ('QZSS', 'Reserved', ''),
-    #202: ('QZSS', 'Reserved', ''),
+    # 200: ('QZSS', 'QZS-4 L5S', ''),
+    # 201: ('QZSS', 'Reserved', ''),
+    # 202: ('QZSS', 'Reserved', ''),
 }
 
 prn_lookup = {

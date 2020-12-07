@@ -10,9 +10,9 @@ eph = get_ephemeris(observation_time)
 print(eph)
 #%%
 eph1 = eph.sel(sv='G01').sel(time=dt.datetime(2013,4,4,0,0,0))
-#%%
+# %%
 
-#%%
+# %%
 # Start with a time window.
 # For each 1ms chip time within the window, work out position and velocity of
 # satellite in ECEF units using the ephemeride
@@ -50,11 +50,14 @@ Mk = Ek - e * np.sin(Ek) # TODO: Solve
 
 # Calculate true anomaly
 vk = np.arctan2(np.sqrt(1-e**2)*np.sin(Ek), np.cos(Ek)-e)
-# TODO: Seems silly to to arctan then immediate cos and sin - could trig be avoided with complex vectors?
+# TODO: Seems silly to to arctan then immediate cos and sin - could trig be
+# avoided with complex vectors?
 
-# Compute the argument of latitude uk from the argumennt of perigee w, true anomaly vk and corrections cuc and cus
+# Compute the argument of latitude uk from the argumennt of perigee w, true
+# anomaly vk and corrections cuc and cus
 uk = w + vk + cuc * cos(2*(w+vk))+ cus * sin(2*(w+vk))
 # Compute the radial distance rk, considering corrections crc and crs
 rk = a * (1 - e*cos(Ek)) + crc * np.cos(2*(w+vk)) + crs * np.sin(2*(w+vk))
-# Compute the inclination ik of the orbital plane from the inclination i0 at the reference time t0e and corrections cic and cis
+# Compute the inclination ik of the orbital plane from the inclination i0 at
+# the reference time t0e and corrections cic and cis
 ik = i0 + i_dot * tk + cic * np.cos(2*(w+vk)) + cis * np.sin(2*(w+vk))

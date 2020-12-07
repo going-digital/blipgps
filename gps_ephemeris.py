@@ -1,13 +1,15 @@
-import datetime as dt
 import requests
 import time
 import georinex as gr
 
-# TODO: Check http://www.igs.org/products for a source of high precision ephemerides
+# TODO: Check http://www.igs.org/products for a source of high precision
+# ephemerides
+
 
 def ephemeris_filename(ephemeris_date):
     # Return daily filename
     return ephemeris_date.strftime("brdc%j0.%yn.Z")
+
 
 def get_ephemeris(ephemeris_date):
     print(ephemeris_date)
