@@ -27,8 +27,7 @@ if that is consistent. 300km x 300km is 9,000km2 for a square. Earth surface
 area is about 510,000,000km2. So ballpark 57,000 circles to check for the whole
 globe. Maybe 100k circles including tiling overlaps. Should be possible to
 compute several regions in parallel until they can be ruled out through
-contradiction. (Should be possible to tesselate the earth by tiling triangular
-faces of an icosahedron - 20 x triangle number) or maybe a cube (6 x n^2)
+contradiction. [Goldberg polyhedra](https://en.wikipedia.org/wiki/Goldberg_polyhedron) might be a good way to do that tiling.
 
 
 ## Satellite positions
