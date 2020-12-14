@@ -219,19 +219,23 @@ def overlay_code(s1_poly, s1_init, s2_init=None):
     for i in range(1, 11):
         if s1_poly & (2**i):
             taps.append(11-i)
-    for i in range(10,-1,-1):
+    for i in range(10, -1, -1):
         init.append(s1_init & (2**i) != 0)
     seq = max_len_seq(11, taps=np.array(taps), state=np.array(init))[0][:1800]
     if s2_init is not None:
         init2 = []
         for i in range(10, -1, -1):
             init2.append(s2_init & (2**i) != 0)
-        s2_seq = max_len_seq(11, taps=np.array([2]), state=np.array(init2))[0][:1800]
+        s2_seq = max_len_seq(
+            11, taps=np.array([2]), state=np.array(init2)
+        )[0][:1800]
         seq = np.bitwise_xor(seq, s2_seq)
     return seq
-# TODO: Implement s2
-#%%
+
+# %%
 # Test PRN1
+
+
 overlay_params = {
     1: (0o5111, 0o3266, None), 2: (0o5421, 0o2040, None),
     3: (0o5501, 0o1527, None), 4: (0o5403, 0o3307, None),
@@ -338,7 +342,7 @@ overlay_params = {
     204: (0o6501, 0o2475, 0o1766), 205: (0o6501, 0o2572, 0o0711),
     206: (0o6501, 0o3265, 0o2533), 207: (0o6501, 0o1250, 0o0353),
     208: (0o6501, 0o1711, 0o1744), 209: (0o6501, 0o2704, 0o0053),
-	210: (0o6501, 0o0135, 0o2222),
+    210: (0o6501, 0o0135, 0o2222),
 }
 
 
@@ -571,6 +575,8 @@ def test_ranging():
         assert(v[3] == np.sum(a[l1cd[-24:]]))
 
 # %%
+
+
 print("Testing ranging codes")
 test_ranging()
 
@@ -647,8 +653,11 @@ overlay_test_vectors = {
     205: (0o2263, 0o0057), 206: (0o1756, 0o3364), 207: (0o1103, 0o1762),
     208: (0o0055, 0o2317), 209: (0o2757, 0o0755), 210: (0o2317, 0o1145),
 }
+
+
 def overlay_code_from_prn(prn):
     return overlay_code(*overlay_params[prn])
+
 
 def test_overlay_code():
     x = np.array([2**i for i in range(10, -1, -1)])
@@ -658,6 +667,8 @@ def test_overlay_code():
         final = np.sum(x * oc[-11:])
         assert(init == v[0])
         assert(final == v[1])
+
+
 print("Testing ranging codes")
 test_overlay_code()
-#%%
+# %%
